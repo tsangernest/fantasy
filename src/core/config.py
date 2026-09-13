@@ -7,9 +7,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     @computed_field
     @property
-    def SQLALCHEMY_DATABASE_URI(self):
+    def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
         return PostgresDsn.build(
-            scheme="postgresql+psycopg2",
+            scheme="postgresql+psycopg",
             username="fantasyuser",
             password="fantasypass",
             host="postgresql",
