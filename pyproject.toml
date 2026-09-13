@@ -3,7 +3,7 @@ name = "fantasy"
 version = "0.1.0"
 description = "Test out UV"
 readme = "README.md"
-requires-python = ">=3.12, <3.15"
+requires-python = ">=3.12,<3.15"
 authors = [
     { name = "p14s", email = "tsangernest@hotmail.com" },
 ]
