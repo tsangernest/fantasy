@@ -160,21 +160,19 @@ name = "fantasy"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "aiomysql" },
+    { name = "aiosqlite" },
     { name = "fastapi" },
     { name = "ollama" },
     { name = "pandas" },
     { name = "pillow" },
+    { name = "psycopg", extra = ["binary", "pool"] },
     { name = "pydantic-settings" },
     { name = "sqlmodel" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.dev-dependencies]
-db-connectors = [
-    { name = "aiomysql" },
-    { name = "aiosqlite" },
-    { name = "psycopg", extra = ["binary", "pool"] },
-]
 dev = [
     { name = "black" },
     { name = "httpx" },
@@ -188,21 +186,19 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "aiomysql", specifier = ">=0.3.2" },
+    { name = "aiosqlite", specifier = ">=0.22.1" },
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "ollama", specifier = ">=0.6.2" },
     { name = "pandas", specifier = ">=3.0.5" },
     { name = "pillow", specifier = ">=12.3.0" },
+    { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.3.5" },
     { name = "pydantic-settings", specifier = ">=2.15.0" },
     { name = "sqlmodel", specifier = ">=0.0.42" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.52.4" },
 ]
 
 [package.metadata.requires-dev]
-db-connectors = [
-    { name = "aiomysql", specifier = ">=0.3.2" },
-    { name = "aiosqlite", specifier = ">=0.22.1" },
-    { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.3.5" },
-]
 dev = [
     { name = "black", specifier = ">=26.5.1" },
     { name = "httpx", specifier = ">=0.28.1" },
