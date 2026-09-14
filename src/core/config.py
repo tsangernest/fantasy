@@ -14,7 +14,7 @@ class Settings(BaseSettings):
             password="fantasypass",
             host="postgresql",
             port=5432,
-            path="fantasy",
+            path="fantasy_main",
         )
 
 

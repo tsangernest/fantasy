@@ -23,4 +23,3 @@ COPY src/ ./src
 
 RUN uv sync --frozen --all-groups
 
-
