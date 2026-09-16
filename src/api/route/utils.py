@@ -9,7 +9,7 @@ router = APIRouter(prefix="/utils", tags=["utils"])
 
 
 @router.get(path="/health-web", response_model=None)
-async def health_web_check():
+async def health_web_check() -> dict:
     return {HTTP_200_OK: "FastAPI is okay!"}
 
 
