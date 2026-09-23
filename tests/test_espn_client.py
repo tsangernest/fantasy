@@ -2,7 +2,7 @@ import pytest
 from pprint import pprint
 
 from httpx import AsyncClient as httpxAsyncClient
-from sqlalchemy import select
+from sqlalchemy import func, select
 from starlette import status
 
 from src.api.deps import SessionDep
@@ -25,30 +25,20 @@ async def test_retrieve_nfl_teams(aclient: httpxAsyncClient, session: SessionDep
     json_r = r.json()
     teams = json_r["sports"][0]["leagues"][0]["teams"]
 
-    data = []
-    for _ in teams:
-        if "Arizona Cardinals" == _['team']["displayName"]:
-            data.append({
-                "espn_id": _['team']['id'],
-                "display_name": _['team']['displayName'],
-                "abbreviation": _['team']['abbreviation'],
-            })
-    team = Team(
-        espn_id=data[0]["espn_id"],
-        display_name=data[0]["display_name"],
-        abbreviation=data[0]["abbreviation"],
-    )
-    session.add(team)
+    team_objs = []
+    for t in teams:
+        team_objs.append(Team(
+            espn_id=t["team"]["id"],
+            display_name=t["team"]["displayName"],
+            nickname=t["team"]["nickname"],
+            short_name=t["team"]["shortDisplayName"],
+            abbreviation=t["team"]["abbreviation"],
+            location=t["team"]["location"],
+        ))
+    session.add_all(team_objs)
     await session.commit()
-    stmt = (select(Team).where(
-        Team.espn_id == int(data[0]["espn_id"]),
-        Team.abbreviation == data[0]["abbreviation"],
-        Team.display_name == data[0]["display_name"],
-    ))
-    result = await session.execute(stmt)
-    team_obj = result.scalars().one()
-    pprint(team_obj)
-    await session.rollback()
+    assert 32 == len(team_objs) == await session.scalar(select(func.count(Team.id)))
+    # pprint(team_objs)
 
 
 @pytest.mark.anyio

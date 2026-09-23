@@ -14,6 +14,8 @@ class Player(SQLModel, table=True):
     last_name: str = Field(nullable=False)
     dob: datetime.date = Field(unique=False, nullable=False)
 
+    team_id: int | None = Field(default=None, foreign_key="team.id")
+
     @functools.cached_property
     def display_name(self) -> str:
         first = f"{self.first_name[0].capitalize()}{self.first_name[1:]}"
@@ -29,9 +31,11 @@ class Player(SQLModel, table=True):
 
 class Team(SQLModel, table=True):
     id: typing.Optional[int] = Field(default=None, primary_key=True)
-    espn_id: int = Field(nullable=False)
+    espn_id: int = Field(unique=True, nullable=False)
 
     display_name: str = Field(nullable=False)
+    nickname: str = Field(nullable=False)
+    short_name: str = Field(nullable=False)
     abbreviation: str = Field(max_length=3, nullable=False)
-    # name: str = Field(nullable=False)
+    location: str = Field(nullable=False)
 
