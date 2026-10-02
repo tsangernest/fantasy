@@ -14,7 +14,7 @@ class Player(SQLModel, table=True):
     last_name: str = Field(nullable=False)
     dob: datetime.date = Field(unique=False, nullable=False)
 
-    team_id: int | None = Field(default=None, foreign_key="team.id")
+    team_id: int | None = Field(default=None, foreign_key="team.espn_id")
 
     @functools.cached_property
     def display_name(self) -> str:
