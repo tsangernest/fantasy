@@ -31,6 +31,17 @@ async def app() -> AsyncGenerator[FastAPI, None]:
 
 @pytest.fixture(scope="module")
 async def aclient(app) ->  AsyncGenerator[httpxAsyncClient, None]:
-    async with httpxAsyncClient(base_url="http://localhost:8000") as aclient:
+    BASE_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl"
+    PARAMS = {"lang": "en", "region": "us"}
+    HEADERS = {"Accept": "application/json", "Accept-Language": "en-US,en;q=0.8", "Referrer": "https://www.google.com"}
+
+    # Can include this once I figure out how to add this into the fixture
+    # "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+    async with httpxAsyncClient(
+            base_url=BASE_URL,
+            params=PARAMS,
+            headers=HEADERS,
+    ) as aclient:
         yield aclient
 

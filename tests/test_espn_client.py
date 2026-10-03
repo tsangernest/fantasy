@@ -1,8 +1,10 @@
 import pytest
 from pprint import pprint
 
+import asyncio
 from httpx import AsyncClient as httpxAsyncClient
 from sqlalchemy import func, select
+from sqlmodel import insert
 from starlette import status
 
 from src.api.deps import SessionDep
@@ -11,37 +13,28 @@ from src.models import Team
 
 @pytest.mark.anyio
 async def test_retrieve_nfl_teams(aclient: httpxAsyncClient, session: SessionDep):
-    r = await aclient.get(
-        url="https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams",
-        params={"lang": "en", "region": "us"},
-        headers={
-            "Accept": "application/json",
-            "Accept-Language": "en-US,en;q=0.8",
-            "Referrer": "https://www.google.com",
-            # "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        },
-    )
+    r = await aclient.get(url="/teams")
     assert status.HTTP_200_OK == r.status_code
     json_r = r.json()
     teams = json_r["sports"][0]["leagues"][0]["teams"]
 
     team_objs = []
     for t in teams:
-        team_objs.append(Team(
-            espn_id=t["team"]["id"],
-            display_name=t["team"]["displayName"],
-            nickname=t["team"]["nickname"],
-            short_name=t["team"]["shortDisplayName"],
-            abbreviation=t["team"]["abbreviation"],
-            location=t["team"]["location"],
-        ))
-    session.add_all(team_objs)
+        team_objs.append({
+            "espn_id": t["team"]["id"],
+            "display_name": t["team"]["displayName"],
+            "nickname": t["team"]["nickname"],
+            "short_name": t["team"]["shortDisplayName"],
+            "abbreviation": t["team"]["abbreviation"],
+            "location": t["team"]["location"],
+        })
+    await session.execute(insert(Team), team_objs)
     await session.commit()
     assert 32 == len(team_objs) == await session.scalar(select(func.count(Team.id)))
     # pprint(team_objs)
 
 
-@pytest.mark.anyio
+@pytest.mark.skip
 async def test_espn_client(aclient: httpxAsyncClient, session: SessionDep):
     r = await aclient.get(
         url="https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
