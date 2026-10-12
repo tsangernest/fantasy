@@ -33,7 +33,11 @@ async def app() -> AsyncGenerator[FastAPI, None]:
 async def aclient(app) ->  AsyncGenerator[httpxAsyncClient, None]:
     BASE_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl"
     PARAMS = {"lang": "en", "region": "us"}
-    HEADERS = {"Accept": "application/json", "Accept-Language": "en-US,en;q=0.8", "Referrer": "https://www.google.com"}
+    HEADERS = {
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.8",
+        "Referrer": "https://www.google.com",
+    }
 
     # Can include this once I figure out how to add this into the fixture
     # "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
